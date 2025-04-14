@@ -1,0 +1,28 @@
+services:
+  postgres:
+    image: postgres:15  # Use the official PostgreSQL image, version 15
+    container_name: postgres_db  # Name of the container (this helps with easy reference)
+    restart: always  # Ensures the container always restarts if it stops unexpectedly
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}  # The database user, set via the environment variable from the .env file
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}  # The password for the PostgreSQL user, set from the .env file
+      POSTGRES_DB: ${POSTGRES_DB}  # The name of the default database to create, set from the .env file
+    ports:
+      - "${POSTGRES_PORT}:5432"  # Maps the container's port 5432 (PostgreSQL default) to the host's dynamic port (from .env)
+    volumes:
+      - pgdata:/var/lib/postgresql/data  # Persists PostgreSQL data to a Docker volume (so data is not lost if container restarts)
+
+  pgadmin:
+    image: dpage/pgadmin4  # Use the official pgAdmin 4 image for the management interface
+    container_name: pgadmin  # Name of the pgAdmin container
+    restart: always  # Ensures the container always restarts if it stops unexpectedly
+    depends_on:
+      - postgres  # Wait for the PostgreSQL container to start before starting pgAdmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}  # Default email for logging into pgAdmin (from .env)
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}  # Default password for logging into pgAdmin (from .env)
+    ports:
+      - "${PGADMIN_PORT}:80"  # Maps port 80 of the pgAdmin container to the host port (from .env)
+
+volumes:
+  pgdata:  # This defines the volume for persistent PostgreSQL data storage
