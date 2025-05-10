@@ -1,8 +1,10 @@
 import dotenv from 'dotenv';
 dotenv.config(); // Load environment variables from .env file
-
+import mongoose from 'mongoose';
+import { createClient } from 'redis';
+import path from 'path';
 import { Sequelize } from 'sequelize-typescript';
-
+// Postgresql Setups
 console.log('Connecting to DB with:', {
   user: process.env.POSTGRES_USER,
   pass: process.env.POSTGRES_PASSWORD,
@@ -28,4 +30,31 @@ const sequelize = new Sequelize({
   logging: false
 });
 
-export default sequelize;
+//Redis DB Setups
+
+const redisClient = createClient({
+ url: `redis://default:${process.env.REDIS_PASSWORD}@${process.env.REDIS_HOST}:${process.env.REDIS_PORT}`,
+ });
+
+redisClient.on('error', (err) => console.error('❌ Redis Error:', err));
+ redisClient.on('connect', () => console.log('✅ Redis connected'));
+
+(async () => {
+  try {
+    await redisClient.connect();
+ } catch (err) {
+    console.error('❌ Redis connection failed', err);
+  }
+ })();
+
+ // MongoDB Setups
+ // MongoDB Setup
+console.log('Connecting to MongoDB with:', {
+  uri: process.env.MONGODB_URI,
+});
+mongoose.connect(process.env.MONGODB_URI as string)
+  .then(() => console.log('✅ MongoDB connected'))
+  .catch((err) => console.error('❌ MongoDB connection failed', err));
+
+
+ export { sequelize, redisClient, mongoose };

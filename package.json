@@ -17,10 +17,11 @@
   "scripts": {
     "dev": "nodemon server.ts",
     "start": "ts-node server.ts"
-  },  
+  },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
     "@types/express": "^5.0.1",
+    "@types/mongoose": "^5.11.96",
     "@types/node": "^22.14.0",
     "@types/sequelize": "^4.28.20",
     "@types/uuid": "^10.0.0",
@@ -37,8 +38,10 @@
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "mongoose": "^8.14.2",
     "pg": "^8.14.1",
     "pg-hstore": "^2.3.4",
+    "redis": "^4.7.0",
     "sequelize": "^6.37.7"
   }
 }

@@ -1,8 +1,11 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import sequelize from './config/db'; // Sequelize instance (without sync)
+import { sequelize } from './config/db'; // Sequelize instance
+import { redisClient } from './config/db';
+import { mongoose } from './config/db'; // MongoDB instance
+import authRoutes from './routes/authRoutes';
 
-dotenv.config(); // Load env variables
+dotenv.config(); // Load .env variables
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -10,27 +13,32 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(express.json());
 
-// Routes (Example)
-import authRoutes from './routes/authRoutes';
+// Routes
 app.use('/api/auth', authRoutes);
 
-// Start the server
+// Server startup logic
 const startServer = async () => {
   try {
-    // Just authenticate the DB connection
+    // Connect to PostgreSQL
     await sequelize.authenticate();
-    console.log('📦 Database connection authenticated successfully.');
+    console.log('📦 Database connection authenticated successfully (PostgreSQL).');
 
-    // ⛔ DO NOT sync() the DB when using migrations
-    // await sequelize.sync(); ← remove this line
+    // Connect to Redis
+    if (!redisClient.isOpen) {
+      await redisClient.connect();
+      console.log('✅ Redis connected successfully.');
+    }
 
-    // Start the server
+    // Connect to MongoDB
+    await mongoose.connect(process.env.MONGODB_URI as string);
+    console.log('✅ MongoDB connected successfully.');
+
+    // Start the Express server
     app.listen(PORT, () => {
-      console.log(`🚀 Server running on http://localhost:${PORT}`);
+      console.log(`🚀 Server running at http://localhost:${PORT}`);
     });
-
   } catch (error) {
-    console.error('❌ Failed to connect to database:', error);
+    console.error('❌ Failed to connect:', error);
     process.exit(1);
   }
 };
