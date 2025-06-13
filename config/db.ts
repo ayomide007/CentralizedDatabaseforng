@@ -47,7 +47,6 @@ redisClient.on('error', (err) => console.error('❌ Redis Error:', err));
   }
  })();
 
- // MongoDB Setups
  // MongoDB Setup
 console.log('Connecting to MongoDB with:', {
   uri: process.env.MONGODB_URI,

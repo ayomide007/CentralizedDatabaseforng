@@ -1,0 +1,10 @@
+Containerization
+install self managed Kafka (docker)
+Swagger Documentation.
+CRUD for Postgres,Mongodb and Redis
+Implement various APIS endpoint, REST
+implement Necessary Gateways
+create envs for different staging
+work with Self-Managed Kubernetes for ochestration knowledge,Sharding,Partitioning, Migration skilss
+Deploy image to Kubernetes, AppRun
+

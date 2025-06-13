@@ -44,3 +44,28 @@ export const registerUser: RequestHandler = async (req, res) => {
     res.status(500).json({ message: 'Something went wrong' });
   }
 };
+
+
+import { PrismaClient } from '../generated/prisma';
+
+const prisma = new PrismaClient();
+
+async function main() {
+  const newCitizen = await prisma.citizen.create({
+    data: {
+      firstName: 'Ayomide',
+      lastName: 'Ajayi',
+      gender: 'Male',
+      dateOfBirth: new Date('1995-06-10'),
+      nin: '12345678901',
+      personalAddress: 'No. 12, Adetola Street, Lagos',
+      familyAddress: 'No. 2, Family Compound, Osogbo',
+      motherName: 'Bola Ajayi',
+      fatherName: 'Tunde Ajayi'
+    }
+  });
+
+  console.log('New Citizen Saved:', newCitizen);
+}
+
+main();

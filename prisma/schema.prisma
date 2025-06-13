@@ -1,0 +1,36 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Citizen {
+  id              String   @id @default(uuid())
+  firstName       String
+  lastName        String
+  middleName      String?
+  gender          String
+  dateOfBirth     DateTime
+  nin             String   @unique
+  bvn             String?  @unique // CBN assigned, should also be unique
+  personalAddress String
+  familyAddress   String
+  motherName      String
+  fatherName      String
+
+  // Optional: status tracking (useful for death records or suspension)
+  isDeceased      Boolean  @default(false)
+  dateOfDeath     DateTime?
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Relations to other agencies can go here later
+  // e.g. educationRecords, policeRecords, prisonRecords etc.
+}
